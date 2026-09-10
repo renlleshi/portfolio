@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Security Alert Triage & Summarization — Automation Portfolio</title>
+<meta name="description" content="An n8n + LLM workflow that normalizes security alerts, classifies severity, and escalates critical ones to Slack.">
+<link rel="stylesheet" href="../../assets/style.css">
+<style>
+  :root{
+    --accent:#A6303B;
+    --accent-soft:#F0D9DB;
+  }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="wrap">
+    <span class="brand">n8n-ai-automation-portfolio</span>
+    <a href="../../index.html">← All projects</a>
+  </div>
+</div>
+
+<div class="wrap">
+
+  <div class="hero">
+    <p class="kicker">Project 03 — Security & IT operations automation</p>
+    <h1>Alert fatigue, minus the fatigue</h1>
+    <p class="subtitle">A workflow that takes a raw security alert from any source, explains it in plain language, and only wakes someone up when it's actually serious.</p>
+    <div class="tags">
+      <span class="tag">n8n</span>
+      <span class="tag">OpenAI API</span>
+      <span class="tag">Webhook</span>
+      <span class="tag">Google Sheets</span>
+      <span class="tag">Slack</span>
+    </div>
+  </div>
+
+  <div class="diagram">
+    <div class="diagram-row">
+      <div class="node">Alert Webhook</div>
+      <div class="arrow">→</div>
+      <div class="node">Normalize Payload</div>
+      <div class="arrow">→</div>
+      <div class="node accent">Classify Severity (LLM)</div>
+      <div class="arrow">→</div>
+      <div class="node">Parse Output</div>
+      <div class="arrow">→</div>
+      <div class="branch-col">
+        <div class="node">Log to Audit Sheet</div>
+        <div class="node">Respond to Webhook</div>
+        <div class="node">If high/critical → Alert Slack</div>
+      </div>
+    </div>
+  </div>
+
+  <section>
+    <h2>The problem</h2>
+    <p>Small security and IT teams get flooded with alerts from different tools, each in its own format. Reading every one manually is slow, and the alerts that actually matter get buried under low-value noise.</p>
+  </section>
+
+  <section>
+    <h2>How it works</h2>
+    <ul class="steps">
+      <li data-n="1">
+        <p class="step-title">Accept alerts from anywhere</p>
+        <p class="step-desc">A webhook receives alerts from a SIEM tool, a script, or a manual report form — whatever the source.</p>
+      </li>
+      <li data-n="2">
+        <p class="step-title">Normalize the shape</p>
+        <p class="step-desc">Different tools send different fields; this step maps everything to one consistent structure.</p>
+      </li>
+      <li data-n="3">
+        <p class="step-title">Classify with an LLM — carefully</p>
+        <p class="step-desc">The model assigns a severity, writes a plain-language summary, and suggests a next action, instructed not to invent facts beyond what the alert actually contains.</p>
+      </li>
+      <li data-n="4">
+        <p class="step-title">Keep a full audit trail</p>
+        <p class="step-desc">Every alert, regardless of severity, is logged to a sheet — nothing disappears silently.</p>
+      </li>
+      <li data-n="5">
+        <p class="step-title">Escalate only what's serious</p>
+        <p class="step-desc">High and critical alerts are pushed straight to a Slack security channel; everything else waits in the log.</p>
+      </li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>Why it matters</h2>
+    <p>This is the project closest to my background: it's not just wiring tool A to tool B, it's reducing alert fatigue while being honest about what the AI does and doesn't know about an incident.</p>
+  </section>
+
+  <section>
+    <h2>Get the workflow</h2>
+    <div class="links">
+      <a href="./workflow.json">Download workflow.json</a>
+      <a href="https://github.com/YOUR_GITHUB_USERNAME/n8n-ai-automation-portfolio/tree/main/projects/03-security-alert-triage">View source on GitHub</a>
+      <a href="../../index.html">Back to portfolio</a>
+    </div>
+  </section>
+
+</div>
+
+<footer>
+  <div class="wrap">
+    Built by [YOUR FULL NAME] — AI Automation Specialist. Personal/demo project, tested with simulated alert data.
+  </div>
+</footer>
+
+</body>
+</html>
