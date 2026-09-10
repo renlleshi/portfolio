@@ -1,8 +1,8 @@
 # AI Automation Portfolio — n8n + LLM Workflows
 
-Hi, I'm **[YOUR FULL NAME]** — an AI Automation Specialist with a background in Information Security (BSc) and a Master's in Computer Science & Artificial Intelligence (expected Nov 2026). I build workflows that connect business tools with LLMs (OpenAI / Anthropic Claude) to remove manual, repetitive work.
+Hi, I'm **Ren Lleshi** — an AI Automation Specialist with a background in Information Security (BSc) and a Master's in Computer Science & Artificial Intelligence (expected Nov 2026). I build workflows that connect business tools with LLMs (OpenAI / Anthropic Claude) to remove manual, repetitive work.
 
-📧 [your.email@gmail.com] · 🔗 [LinkedIn URL] · 📍 Open to remote work
+📧 renlleshi@gmail.com · 🔗 (https://al.linkedin.com/in/renato-lleshi-7bb98018a) · 📍 Open to remote work
 
 This repository documents three end-to-end automation workflows I designed and built with **n8n**, each targeting a different real-world business problem. Every workflow is exported as importable JSON, with a dedicated README explaining the problem, the logic, and how to set it up.
 
@@ -39,4 +39,4 @@ These are personal / portfolio projects built to demonstrate real automation pat
 `n8n` · `Make (Integromat)` · `Zapier` · `OpenAI API` · `Anthropic Claude API` · `Google Workspace` · `Slack API` · `REST APIs / Webhooks` · `JSON` · `Python (basic-intermediate)` · `SQL fundamentals`
 
 ## 📬 Contact
-Open to remote roles and freelance automation projects — feel free to reach out at [your.email@gmail.com].
+Open to remote roles and freelance automation projects — feel free to reach out at renlleshi@gmail.com.
