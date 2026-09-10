@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lead Enrichment & Scoring Pipeline — Automation Portfolio</title>
+<meta name="description" content="An n8n + LLM workflow that researches a lead's company automatically and scores it for sales fit.">
+<link rel="stylesheet" href="../../assets/style.css">
+<style>
+  :root{
+    --accent:#3F7A54;
+    --accent-soft:#DDEBE1;
+  }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="wrap">
+    <span class="brand">n8n-ai-automation-portfolio</span>
+    <a href="../../index.html">← All projects</a>
+  </div>
+</div>
+
+<div class="wrap">
+
+  <div class="hero">
+    <p class="kicker">Project 02 — Sales & RevOps automation</p>
+    <h1>Turn a raw contact list into a scored pipeline</h1>
+    <p class="subtitle">A workflow that takes a bare lead — name, email, website — and comes back with a company summary, an industry estimate, and a fit score, without anyone opening a browser tab.</p>
+    <div class="tags">
+      <span class="tag">n8n</span>
+      <span class="tag">OpenAI API</span>
+      <span class="tag">HTTP Request</span>
+      <span class="tag">Google Sheets</span>
+      <span class="tag">Slack</span>
+    </div>
+  </div>
+
+  <div class="diagram">
+    <div class="diagram-row">
+      <div class="node">New Lead (Sheet row)</div>
+      <div class="arrow">→</div>
+      <div class="node">Fetch Company Website</div>
+      <div class="arrow">→</div>
+      <div class="node">Extract Text</div>
+      <div class="arrow">→</div>
+      <div class="node accent">Enrich & Score (LLM)</div>
+      <div class="arrow">→</div>
+      <div class="branch-col">
+        <div class="node">Update Sheet Row</div>
+        <div class="node">If score ≥ 70 → Notify Sales</div>
+      </div>
+    </div>
+  </div>
+
+  <section>
+    <h2>The problem</h2>
+    <p>A new lead usually arrives as almost nothing — a name and a website. Before sales can decide whether it's worth a call, someone has to manually open the site, read it, and guess whether it's a good fit. That research step is where most leads quietly go cold.</p>
+  </section>
+
+  <section>
+    <h2>How it works</h2>
+    <ul class="steps">
+      <li data-n="1">
+        <p class="step-title">Detect the new lead</p>
+        <p class="step-desc">A trigger watches a Google Sheet and fires the moment a new row is added.</p>
+      </li>
+      <li data-n="2">
+        <p class="step-title">Pull the company's own words</p>
+        <p class="step-desc">The workflow fetches the lead's website directly and strips it down to plain text.</p>
+      </li>
+      <li data-n="3">
+        <p class="step-title">Enrich and score with an LLM</p>
+        <p class="step-desc">The text is summarized into a company profile — industry, estimated size — and scored 0–100 against a fit criteria.</p>
+      </li>
+      <li data-n="4">
+        <p class="step-title">Write it back automatically</p>
+        <p class="step-desc">The same sheet row is updated in place — no copy-pasting between tools.</p>
+      </li>
+      <li data-n="5">
+        <p class="step-title">Surface the hot ones</p>
+        <p class="step-desc">Any lead scoring 70 or above triggers an instant Slack message to the sales channel.</p>
+      </li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>Why it matters</h2>
+    <p>This mirrors the kind of enrichment/waterfall logic tools like Clay are built around: going from a spreadsheet of names to a researched, scored pipeline, with no manual lookup in between.</p>
+  </section>
+
+  <section>
+    <h2>Get the workflow</h2>
+    <div class="links">
+      <a href="./workflow.json">Download workflow.json</a>
+      <a href="https://github.com/YOUR_GITHUB_USERNAME/n8n-ai-automation-portfolio/tree/main/projects/02-lead-enrichment-pipeline">View source on GitHub</a>
+      <a href="../../index.html">Back to portfolio</a>
+    </div>
+  </section>
+
+</div>
+
+<footer>
+  <div class="wrap">
+    Built by [YOUR FULL NAME] — AI Automation Specialist. Personal/demo project, tested with sample data.
+  </div>
+</footer>
+
+</body>
+</html>

@@ -1,0 +1,154 @@
+{
+  "name": "Lead Enrichment & Scoring Pipeline",
+  "nodes": [
+    {
+      "parameters": {
+        "pollTimes": { "item": [{ "mode": "everyX", "unit": "minutes", "value": 5 }] },
+        "documentId": { "mode": "list", "value": "REPLACE_WITH_YOUR_SHEET_ID" },
+        "sheetName": { "mode": "list", "value": "Leads" },
+        "event": "rowAdded"
+      },
+      "id": "2b2b2b2b-0001-4b2b-9b2b-000000000001",
+      "name": "New Lead - Google Sheets Trigger",
+      "type": "n8n-nodes-base.googleSheetsTrigger",
+      "typeVersion": 1,
+      "position": [-320, 0],
+      "credentials": {
+        "googleSheetsOAuth2Api": { "id": "REPLACE_WITH_YOUR_CREDENTIAL_ID", "name": "Google Sheets account" }
+      }
+    },
+    {
+      "parameters": {
+        "url": "={{ $json.CompanyWebsite }}",
+        "options": { "timeout": 8000, "response": { "response": { "neverError": true } } }
+      },
+      "id": "2b2b2b2b-0002-4b2b-9b2b-000000000002",
+      "name": "Fetch Company Website",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [-80, 0]
+    },
+    {
+      "parameters": {
+        "jsCode": "const html = $input.first().json.data || '';\nconst text = html\n  .replace(/<script[\\s\\S]*?<\\/script>/gi, ' ')\n  .replace(/<style[\\s\\S]*?<\\/style>/gi, ' ')\n  .replace(/<[^>]+>/g, ' ')\n  .replace(/\\s+/g, ' ')\n  .trim()\n  .slice(0, 4000);\n\nreturn [{\n  json: {\n    leadName: $('New Lead - Google Sheets Trigger').first().json.LeadName,\n    company: $('New Lead - Google Sheets Trigger').first().json.Company,\n    email: $('New Lead - Google Sheets Trigger').first().json.Email,\n    website: $('New Lead - Google Sheets Trigger').first().json.CompanyWebsite,\n    rowNumber: $('New Lead - Google Sheets Trigger').first().json.row_number,\n    websiteText: text\n  }\n}];"
+      },
+      "id": "2b2b2b2b-0003-4b2b-9b2b-000000000003",
+      "name": "Extract Text Content",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [160, 0]
+    },
+    {
+      "parameters": {
+        "resource": "text",
+        "operation": "message",
+        "modelId": "gpt-4o-mini",
+        "messages": {
+          "values": [
+            {
+              "role": "system",
+              "content": "You are a B2B sales research assistant. Based on the raw website text provided, summarize what the company does, estimate its likely industry and company size, and give a lead qualification score from 0-100 for a company selling AI automation / workflow consulting services (higher score = better fit: mid-size company, clear operational pain points, tech-friendly). Respond with ONLY valid JSON: {\"summary\": \"...\", \"industry\": \"...\", \"estimated_size\": \"...\", \"score\": 0}."
+            },
+            {
+              "role": "user",
+              "content": "=Company: {{ $json.company }}\nWebsite text:\n{{ $json.websiteText }}"
+            }
+          ]
+        },
+        "options": { "temperature": 0.2 }
+      },
+      "id": "2b2b2b2b-0004-4b2b-9b2b-000000000004",
+      "name": "Enrich & Score with AI",
+      "type": "n8n-nodes-base.openAi",
+      "typeVersion": 1.3,
+      "position": [400, 0],
+      "credentials": {
+        "openAiApi": { "id": "REPLACE_WITH_YOUR_CREDENTIAL_ID", "name": "OpenAI account" }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "const raw = $input.first().json.message?.content || $input.first().json.text || '{}';\nlet parsed;\ntry {\n  parsed = JSON.parse(raw);\n} catch (e) {\n  parsed = { summary: 'Could not parse enrichment.', industry: 'Unknown', estimated_size: 'Unknown', score: 0 };\n}\nconst prev = $('Extract Text Content').first().json;\nreturn [{\n  json: {\n    rowNumber: prev.rowNumber,\n    leadName: prev.leadName,\n    company: prev.company,\n    email: prev.email,\n    summary: parsed.summary,\n    industry: parsed.industry,\n    estimated_size: parsed.estimated_size,\n    score: parsed.score\n  }\n}];"
+      },
+      "id": "2b2b2b2b-0005-4b2b-9b2b-000000000005",
+      "name": "Parse Enrichment Output",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [640, 0]
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "documentId": { "mode": "list", "value": "REPLACE_WITH_YOUR_SHEET_ID" },
+        "sheetName": { "mode": "list", "value": "Leads" },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "matchingColumns": ["row_number"],
+          "value": {
+            "row_number": "={{ $json.rowNumber }}",
+            "Summary": "={{ $json.summary }}",
+            "Industry": "={{ $json.industry }}",
+            "Estimated Size": "={{ $json.estimated_size }}",
+            "Score": "={{ $json.score }}"
+          }
+        }
+      },
+      "id": "2b2b2b2b-0006-4b2b-9b2b-000000000006",
+      "name": "Update Lead in Sheet",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [880, 0],
+      "credentials": {
+        "googleSheetsOAuth2Api": { "id": "REPLACE_WITH_YOUR_CREDENTIAL_ID", "name": "Google Sheets account" }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": { "caseSensitive": true, "leftValue": "", "typeValidation": "strict" },
+          "conditions": [
+            {
+              "id": "cond-score",
+              "leftValue": "={{ $json.score }}",
+              "rightValue": 70,
+              "operator": { "type": "number", "operation": "gte" }
+            }
+          ],
+          "combinator": "and"
+        }
+      },
+      "id": "2b2b2b2b-0007-4b2b-9b2b-000000000007",
+      "name": "IF Score >= 70",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [1120, 0]
+    },
+    {
+      "parameters": {
+        "select": "channel",
+        "channelId": { "mode": "name", "value": "sales-hot-leads" },
+        "text": "=🔥 High-fit lead: *{{ $json.company }}* (score {{ $json.score }})\nContact: {{ $json.leadName }} — {{ $json.email }}\nSummary: {{ $json.summary }}"
+      },
+      "id": "2b2b2b2b-0008-4b2b-9b2b-000000000008",
+      "name": "Notify Sales on Slack",
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 2.2,
+      "position": [1360, -80],
+      "credentials": {
+        "slackApi": { "id": "REPLACE_WITH_YOUR_CREDENTIAL_ID", "name": "Slack account" }
+      }
+    }
+  ],
+  "connections": {
+    "New Lead - Google Sheets Trigger": { "main": [[{ "node": "Fetch Company Website", "type": "main", "index": 0 }]] },
+    "Fetch Company Website": { "main": [[{ "node": "Extract Text Content", "type": "main", "index": 0 }]] },
+    "Extract Text Content": { "main": [[{ "node": "Enrich & Score with AI", "type": "main", "index": 0 }]] },
+    "Enrich & Score with AI": { "main": [[{ "node": "Parse Enrichment Output", "type": "main", "index": 0 }]] },
+    "Parse Enrichment Output": { "main": [[{ "node": "Update Lead in Sheet", "type": "main", "index": 0 }]] },
+    "Update Lead in Sheet": { "main": [[{ "node": "IF Score >= 70", "type": "main", "index": 0 }]] },
+    "IF Score >= 70": { "main": [ [{ "node": "Notify Sales on Slack", "type": "main", "index": 0 }], [] ] }
+  },
+  "active": false,
+  "settings": { "executionOrder": "v1" },
+  "meta": { "templateCredsSetupCompleted": false }
+}
