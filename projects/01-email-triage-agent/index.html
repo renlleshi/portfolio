@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI Email Triage & Auto-Draft Agent — Automation Portfolio</title>
+<meta name="description" content="An n8n + LLM workflow that classifies inbound email, drafts replies, and escalates urgent messages automatically.">
+<link rel="stylesheet" href="../../assets/style.css">
+<style>
+  :root{
+    --accent:#B8792A;
+    --accent-soft:#F2E3CC;
+  }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="wrap">
+    <span class="brand">n8n-ai-automation-portfolio</span>
+    <a href="../../index.html">← All projects</a>
+  </div>
+</div>
+
+<div class="wrap">
+
+  <div class="hero">
+    <p class="kicker">Project 01 — Communication automation</p>
+    <h1>An inbox that sorts and drafts its own replies</h1>
+    <p class="subtitle">A workflow that reads every incoming email, decides what it is, writes a first-draft reply, and only interrupts a human when something is actually urgent.</p>
+    <div class="tags">
+      <span class="tag">n8n</span>
+      <span class="tag">OpenAI API</span>
+      <span class="tag">Gmail</span>
+      <span class="tag">Google Sheets</span>
+      <span class="tag">Slack</span>
+    </div>
+  </div>
+
+  <div class="diagram">
+    <div class="diagram-row">
+      <div class="node">Gmail Trigger</div>
+      <div class="arrow">→</div>
+      <div class="node">Extract Email Data</div>
+      <div class="arrow">→</div>
+      <div class="node accent">Classify & Draft (LLM)</div>
+      <div class="arrow">→</div>
+      <div class="node">Parse AI Output</div>
+      <div class="arrow">→</div>
+      <div class="branch-col">
+        <div class="node">Log to Sheet</div>
+        <div class="node">If spam → Create Draft</div>
+        <div class="node">If urgent → Notify Slack</div>
+      </div>
+    </div>
+  </div>
+
+  <section>
+    <h2>The problem</h2>
+    <p>Small teams lose real hours every week just reading and sorting email — separating a genuine emergency from a routine question, a sales lead, or spam — before anyone even starts replying.</p>
+  </section>
+
+  <section>
+    <h2>How it works</h2>
+    <ul class="steps">
+      <li data-n="1">
+        <p class="step-title">Watch the inbox</p>
+        <p class="step-desc">A Gmail trigger picks up every new unread message as it arrives.</p>
+      </li>
+      <li data-n="2">
+        <p class="step-title">Classify and draft with an LLM</p>
+        <p class="step-desc">The email is sent to GPT-4o-mini, which returns a category (Sales, Support, Urgent, Spam), a priority, and a short suggested reply.</p>
+      </li>
+      <li data-n="3">
+        <p class="step-title">Log everything</p>
+        <p class="step-desc">Every processed email is written to a Google Sheet, building a running record of what's coming in and how it was handled.</p>
+      </li>
+      <li data-n="4">
+        <p class="step-title">Draft, don't send</p>
+        <p class="step-desc">For anything that isn't spam, a Gmail draft is created automatically — a person still reviews it before it goes out.</p>
+      </li>
+      <li data-n="5">
+        <p class="step-title">Escalate what matters</p>
+        <p class="step-desc">If the message is flagged urgent, a Slack alert fires immediately so it doesn't sit unread in a queue.</p>
+      </li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>Why it matters</h2>
+    <p>The workflow doesn't try to remove the human from the loop — replies still need a review before sending. It removes the slowest, most repetitive part: reading and triaging, while leaving a clear, auditable log of every decision.</p>
+  </section>
+
+  <section>
+    <h2>Get the workflow</h2>
+    <div class="links">
+      <a href="./workflow.json">Download workflow.json</a>
+      <a href="https://github.com/YOUR_GITHUB_USERNAME/n8n-ai-automation-portfolio/tree/main/projects/01-email-triage-agent">View source on GitHub</a>
+      <a href="../../index.html">Back to portfolio</a>
+    </div>
+  </section>
+
+</div>
+
+<footer>
+  <div class="wrap">
+    Built by [YOUR FULL NAME] — AI Automation Specialist. Personal/demo project, tested with sample data.
+  </div>
+</footer>
+
+</body>
+</html>
