@@ -1,0 +1,11 @@
+# Never commit real credentials or environment files
+.env
+*.env
+credentials.json
+*.key
+
+# OS / editor junk
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
